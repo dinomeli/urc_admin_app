@@ -1,15 +1,26 @@
 workflows:
-  ios-build:
-    name: iOS Build No Sign
-    max_build_duration: 60
+  ios-appetize:
+    name: iOS Simulator Build for Appetize
+    max_build_duration: 30
     instance_type: mac_mini_m1
+    environment:
+      flutter: stable
     scripts:
       - name: Set up Flutter
-        script: flutter channel stable && flutter upgrade
-      - name: Get dependencies
-        script: flutter pub get
-      - name: Build iOS without signing
         script: |
-          flutter build ios --debug --no-codesign
+          flutter channel stable
+          flutter upgrade
+      - name: Install dependencies
+        script: |
+          flutter pub get
+      - name: Build for Simulator
+        script: |
+          # استفاده از دستور دقیق برای ساخت نسخه شبیه‌ساز
+          flutter build ios --simulator --debug --no-codesign
+      - name: Prepare for Appetize
+        script: |
+          # رفتن به پوشه درست و زیپ کردن Runner.app
+          cd build/ios/iphonesimulator
+          zip -r ios_simulator_app.zip Runner.app
     artifacts:
-      - build/ios/iphoneos/*.app
+      - build/ios/iphonesimulator/*.zip
