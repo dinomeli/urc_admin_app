@@ -25,7 +25,20 @@ class _LoginScreenState extends State<LoginScreen> {
   String? _errorMessage;
 
   final _authRepo = AuthRepository();
-  final _storage = const FlutterSecureStorage();
+  
+  // در بخش تعریف FlutterSecureStorage
+final _storage = const FlutterSecureStorage(
+  iOptions: IOSOptions(
+    // این گزینه باعث می‌شود در شبیه‌ساز ارور امنیتی نگیرید
+    accessibility: KeychainAccessibility.first_unlock,
+    // این گزینه از بروز تداخل در گروه‌های اپلیکیشن جلوگیری می‌کند
+    groupId: null,
+  ),
+  // برای اندروید هم تنظیمات پیش‌فرض بماند
+  aOptions: AndroidOptions(
+    encryptedSharedPreferences: true,
+  ),
+);
   final _localAuth = LocalAuthentication();
 
   @override
